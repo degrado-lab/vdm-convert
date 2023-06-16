@@ -1,6 +1,5 @@
 from setuptools import setup, find_packages
 
-###TODO: fill this out
 setup(
     name='vdm-convert',
     version='0.1',
@@ -9,13 +8,14 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'example_script=example_package.example_script:main',
+            'vdm_convert=vdm_convert.parquet_convert:main',
+            'vdm_display=vdm_convert.pymol_session:main',
         ],
     },
     author='Nicholas Freitas',
     author_email='nicholas.freitas@ucsf.edu',
     description='For converting VDM parquet files to other formats',
-    long_description='',
+    long_description='https://github.com/njf042/vdm-convert',
     url='',
     classifiers=[
         'Programming Language :: Python :: 3',
