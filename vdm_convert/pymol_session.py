@@ -73,9 +73,19 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 	for i, pdb in enumerate(input_file_names):
 		if i > 1000:
 			break
-		if score_cutoff is not None and scores[i] > score_cutoff:
-			if residues[i] in residues:
-				cmd.load(pdb)
+		#Include all files by default:
+		include_current_file = True
+
+		#Filter by score and residue, if applicable:
+		if score_cutoff is not None:
+			if scores[i] < score_cutoff:
+				include_current_file = False
+		if residues is not None:
+			if residues[i] not in residues:
+				include_current_file = False
+		if include_current_file:
+			cmd.load(pdb)
+		
 
 	cmd.hide("all")
 	cmd.show_as("licorice", "chain X")
