@@ -46,7 +46,7 @@ def generate_filename(dir,name,ext):
 def convert(input_dir, output_dir, out_type='PDB', residues=None):
 	'''
 	Converts parquet.gzip files to specified file type, and stores in output directory.
-	Currently supports PDB, PQR, and XYZ.
+	Currently supports PDB, PQR, PSF, and DCD.
 	Arguments:
 		input_dir: directory containing parquet.gzip files
 		output_dir: directory to write output files to
@@ -94,7 +94,7 @@ def convert(input_dir, output_dir, out_type='PDB', residues=None):
 	### Sort list of atom groups by C_score
 	atomgroup_list.sort(key=lambda a: a[2], reverse=True)
 
-	convert_function_dict = {'PDB': prody.writePDB, 'PQR': prody.writePQR, 'XYZ': prody.writeXYZ}
+	convert_function_dict = {'PDB': prody.writePDB, 'PQR': prody.writePQR, 'PSF': prody.writePSF, 'DCD': prody.writeDCD}
 
 	### Make output files and record names to load into pymol:
 	print('Writing '+out_type+'s...')
@@ -117,12 +117,12 @@ def convert(input_dir, output_dir, out_type='PDB', residues=None):
 
 def main():
 	argp = argparse.ArgumentParser()
-	argp.add_argument('--input-dir', '-i', default = ".", help="Parquet input directory, relative to working directory.")
-	argp.add_argument('--output-dir', '-o', default="convert", help="Output file directory")
-	argp.add_argument('--output-type', '-t', default="PDB", help="Filetype to convert to. Currently supports PDB, PQR, and XYZ.")
+	argp.add_argument('--input-dir', '-i', default = ".", help="Parquet input directory. Defaults to current directory.")
+	argp.add_argument('--output-dir', '-o', default="convert", help="Output file directory. Defaults to 'convert/'.")
+	argp.add_argument('--output-type', '-t', default="PDB", help="Filetype to convert to. Currently supports PDB, PQR, PSF, and DCD.")
 	args = argp.parse_args()
 
-	convert(args.input_dir, args.output_dir, out_type='PDB')
+	convert(args.input_dir, args.output_dir, out_type=args.output_type)
 
 
 if __name__ == '__main__':
