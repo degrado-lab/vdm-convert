@@ -46,7 +46,7 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 		from pymol import cmd
 	except ImportError:
 		print('Pymol not found. Please install pymol and try again.')
-		print('Pymol can be installed with: conda install -c conda-forge -c schrodinger pymol')
+		print('Pymol can be installed with: conda install -c conda-forge -c schrodinger pymol-bundle')
 		return
 
 	if residues is None:
