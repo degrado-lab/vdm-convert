@@ -55,6 +55,10 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 	
 	input_file_names = [join(input_dir, f) for f in listdir(input_dir) if isfile(join(input_dir, f)) and (f.endswith(input_type.lower()) or f.endswith(input_type.upper()))]
 	
+	if len(input_file_names) == 0:
+		print("No files found in input directory. Exiting.")
+		return
+
 	#Get scores from each infile name:
 	scores = []
 	for f in input_file_names:
@@ -105,24 +109,3 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 	#Hide all but first object, set up scene:
 	cmd.disable("(all)")
 	show_obj(cmd.idx)
-
-def main():
-	#Since we'll be launching from pymol, we shift over the arguments by one:
-	if not sys.argv[0].endswith('pymol'):
-		print('Please launch this script with pymol by: pymol pymol_session')
-		return
-	for i in range(len(sys.argv)-1):
-		sys.argv[i] = sys.argv[i+1]
-	sys.argv.pop()
-	
-	argp = argparse.ArgumentParser()
-	argp.add_argument('--input-dir', '-i', default = ".", help="Parquet input directory, relative to working directory.")
-	argp.add_argument('--input-type', '-t', default="PDB", help="Filetype of converted vdMs. Currently supports PDB, PQR, and XYZ.")
-	argp.add_argument('--score-cutoff', '-s', default=None, help="Minimum score to include. Default: include all.")
-	argp.add_argument('--residues', '-r', default=None, nargs='+', help="Residues to include. Default: include all.")
-	args = argp.parse_args()
-
-	create_session(args.input_dir, args.input_type, residues=args.residues, score_cutoff=args.score_cutoff)
-
-if __name__ == '__main__':
-	main()
