@@ -7,7 +7,9 @@ setup(
     install_requires=[
         'prody',
         'numpy',
-        'pandas'
+        'pandas',
+        'pyarrow',
+        'fastparquet'
     ],
     entry_points={
         'console_scripts': [
