@@ -14,7 +14,7 @@ setup(
     entry_points={
         'console_scripts': [
             'vdm_convert=vdm_convert.parquet_convert:main',
-            'vdm_display=vdm_convert.pymol_session:main',
+            'vdm_display=vdm_convert.launch_pymol:main',
         ],
     },
     author='Nicholas Freitas',
