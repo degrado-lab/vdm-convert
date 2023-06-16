@@ -52,8 +52,8 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 			'LEU', 'LYS', 'MET', 'PHE', 'PRO', 
 			'SER', 'THR', 'TRP', 'TYR', 'VAL']
 	
-	input_file_names = [join(input_dir, f) for f in listdir(input_dir) if isfile(join(input_dir, f)) and f.endswith(input_type)]
-
+	input_file_names = [join(input_dir, f) for f in listdir(input_dir) if isfile(join(input_dir, f)) and (f.endswith(input_type.lower()) or f.endswith(input_type.upper()))]
+	
 	#Get scores from each infile name:
 	scores = []
 	for f in input_file_names:
@@ -70,6 +70,7 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 	if len(input_file_names) > 1000:
 		print("Warning: more than 1000 structures to load. Only showing top structures")
 	
+	print("Loading structures...")
 	for i, pdb in enumerate(input_file_names):
 		if i > 1000:
 			break
@@ -85,7 +86,6 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 				include_current_file = False
 		if include_current_file:
 			cmd.load(pdb)
-		
 
 	cmd.hide("all")
 	cmd.show_as("licorice", "chain X")
