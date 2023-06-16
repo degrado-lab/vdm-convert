@@ -98,7 +98,6 @@ def convert(input_dir, output_dir, out_type='PDB', residues=None):
 
 	### Make output files and record names to load into pymol:
 	print('Writing '+out_type+'s...')
-	#out_file_names = []
 	for atom_group, resid, c_score, is_centroid, pdb, cnum in atomgroup_list:
 		#Here, we're only showing the centroids.
 		if is_centroid == True:
@@ -106,14 +105,11 @@ def convert(input_dir, output_dir, out_type='PDB', residues=None):
 			if os.path.exists(pdb_file_name):
 				print("Warning: centroid file already exists. Overwriting!!!")
 			convert_function_dict[out_type](pdb_file_name, atom_group)
-			#prody.writePDB(pdb_file_name, atom_group)
-			#out_file_names.append(pdb_file_name)
 		else:
 			pdb_file_name = generate_filename(output_dir,resid+'_'+str(c_score)[:5]+'_'+pdb+'_clus'+str(cnum),'.pdb')
 			if os.path.exists(pdb_file_name):
 				print("Warning: file already exists. Overwriting!!!")
 			convert_function_dict[out_type](pdb_file_name, atom_group)
-			#out_file_names.append(pdb_file_name)
 
 def main():
 	argp = argparse.ArgumentParser()
