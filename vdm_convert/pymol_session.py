@@ -1,4 +1,5 @@
-from pymol import cmd
+import importlib
+#from pymol import cmd
 from os import listdir
 from os.path import isfile, join
 
@@ -39,6 +40,13 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 	Returns:
 		None
 	'''
+
+	try:
+		from pymol import cmd
+	except ImportError:
+		print('Pymol not found. Please install pymol and try again.')
+		print('Pymol can be installed with: conda install -c conda-forge -c schrodinger pymol')
+		return
 
 	if residues is None:
 		residues = ['ALA', 'ARG', 'ASN', 'ASP', 'CYS', 
