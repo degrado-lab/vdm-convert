@@ -4,32 +4,6 @@ from os import listdir
 from os.path import isfile, join
 import argparse
 
-#######################################
-### HELPER FUNCTIONS
-#######################################
-def show_obj(i):
-	current_obj = "all" if i == -1 else cmd.get_object_list('(all)')[i]
-	cmd.enable(current_obj)
-
-def hide_obj(i):
-	current_obj = "all" if i == -1 else cmd.get_object_list('(all)')[i]
-	cmd.disable(current_obj)
-	
-def next_obj():
-	hide_obj(cmd.idx)
-	cmd.idx+=1
-	if cmd.idx > len(cmd.get_object_list('(all)'))-1:
-		cmd.idx = -1
-	show_obj(cmd.idx)
-
-def prev_obj():
-	hide_obj(cmd.idx)
-	cmd.idx-=1
-	if cmd.idx < -1:
-		cmd.idx = len(cmd.get_object_list('(all)'))-1
-	show_obj(cmd.idx)
-	
-
 def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None):
 	'''
 	Creates a pymol session from a directory of converted vdM files.
@@ -48,6 +22,29 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 		print('Pymol not found. Please install pymol and try again.')
 		print('Pymol can be installed with: conda install -c conda-forge -c schrodinger pymol-bundle')
 		return
+	
+	### HELPER FUNCTIONS FOR PYMOL SESSION
+	def show_obj(i):
+		current_obj = "all" if i == -1 else cmd.get_object_list('(all)')[i]
+		cmd.enable(current_obj)
+
+	def hide_obj(i):
+		current_obj = "all" if i == -1 else cmd.get_object_list('(all)')[i]
+		cmd.disable(current_obj)
+		
+	def next_obj():
+		hide_obj(cmd.idx)
+		cmd.idx+=1
+		if cmd.idx > len(cmd.get_object_list('(all)'))-1:
+			cmd.idx = -1
+		show_obj(cmd.idx)
+
+	def prev_obj():
+		hide_obj(cmd.idx)
+		cmd.idx-=1
+		if cmd.idx < -1:
+			cmd.idx = len(cmd.get_object_list('(all)'))-1
+		show_obj(cmd.idx)
 
 	if residues is None:
 		residues = ['ALA', 'ARG', 'ASN', 'ASP', 'CYS', 
