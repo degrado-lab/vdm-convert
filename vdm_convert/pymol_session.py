@@ -3,6 +3,7 @@ import importlib
 from os import listdir
 from os.path import isfile, join
 import argparse
+import sys
 
 def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None):
 	'''
@@ -106,6 +107,14 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 	show_obj(cmd.idx)
 
 def main():
+	#Since we'll be launching from pymol, we shift over the arguments by one:
+	if not sys.argv[0].endswith('pymol'):
+		print('Please launch this script with pymol by: pymol pymol_session')
+		return
+	for i in range(len(sys.argv)-1):
+		sys.argv[i] = sys.argv[i+1]
+	sys.argv.pop()
+	
 	argp = argparse.ArgumentParser()
 	argp.add_argument('--input-dir', '-i', default = ".", help="Parquet input directory, relative to working directory.")
 	argp.add_argument('--input-type', '-t', default="PDB", help="Filetype of converted vdMs. Currently supports PDB, PQR, and XYZ.")
