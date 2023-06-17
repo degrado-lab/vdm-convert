@@ -110,3 +110,5 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 	#Hide all but first object, set up scene:
 	cmd.disable("(all)")
 	show_obj(cmd.idx)
+
+	print('Pymol session created. \nUse left and right arrow keys to iterate through structures.')
