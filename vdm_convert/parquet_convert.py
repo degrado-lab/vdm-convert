@@ -4,6 +4,7 @@ import prody
 import os
 from os.path import join
 import argparse
+import traceback
 
 ########################################
 ### HELPER FUNCTIONS
@@ -98,26 +99,33 @@ def convert(input_dir, output_dir, out_type='PDB', residues=None):
 
 	### Make output files and record names to load into pymol:
 	print('Writing '+out_type+'s...')
+	#Output an error message at the end if one occurs:
+	error_message = ''
 	for atom_group, resid, c_score, is_centroid, pdb, cnum in atomgroup_list:
-		#Here, we're only showing the centroids.
-		if is_centroid == True:
-			pdb_file_name = generate_filename(output_dir,resid+'_'+str(c_score)[:5]+'_'+pdb+'_clus'+str(cnum),'_centroid.pdb')
-			if os.path.exists(pdb_file_name):
-				print("Warning: centroid file already exists. Overwriting!!!")
+		
+		struct_name = resid+'_'+str(c_score)[:5]+'_'+pdb+'_clus'+str(cnum)
+		struct_name = struct_name+'_centroid' if is_centroid else struct_name
+		pdb_file_name = generate_filename(output_dir,struct_name,'')
+		if os.path.exists(pdb_file_name):
+			print("Warning: file already exists. Overwriting!") #N.B. This shouldn't happen.
+		try:
 			convert_function_dict[out_type](pdb_file_name, atom_group)
-		else:
-			pdb_file_name = generate_filename(output_dir,resid+'_'+str(c_score)[:5]+'_'+pdb+'_clus'+str(cnum),'.pdb')
-			if os.path.exists(pdb_file_name):
-				print("Warning: file already exists. Overwriting!!!")
-			convert_function_dict[out_type](pdb_file_name, atom_group)
-
+		except:
+			error_message = traceback.format_exc()
+			print("Error: couldn't write {} file for {}".format(out_type, pdb_file_name))
+	if error_message != '':
+		print('\nMost recent error message:')
+		print(error_message)
+	
+	print('Done!')
+	
 def main():
 	argp = argparse.ArgumentParser()
 	argp.add_argument('--input-dir', '-i', default = ".", help="Parquet input directory. Defaults to current directory.")
 	argp.add_argument('--output-dir', '-o', default="convert", help="Output file directory. Defaults to 'convert/'.")
-	argp.add_argument('--output-type', '-t', default="PDB", help="Filetype to convert to. Currently supports PDB, PQR, PSF, and DCD.")
+	argp.add_argument('--output-type', '-t', default="PDB", choices=['PDB', 'PQR', 'PSF', 'DCD'], type=str.upper, help="Filetype to convert to. Defaults to PDB.")
 	args = argp.parse_args()
-
+	
 	convert(args.input_dir, args.output_dir, out_type=args.output_type)
 
 
