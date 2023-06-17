@@ -21,8 +21,7 @@ def create_session(input_dir, input_type='PDB', selected_residues=None, score_cu
 	try:
 		from pymol import cmd
 	except ImportError:
-		print('Pymol not found. Please install pymol and try again.')
-		print('Pymol can be installed with: conda install -c conda-forge -c schrodinger pymol-bundle')
+		print('Pymol not found. This function should only be called from within pymol.')
 		return
 	
 	### HELPER FUNCTIONS FOR PYMOL SESSION
@@ -99,7 +98,13 @@ def create_session(input_dir, input_type='PDB', selected_residues=None, score_cu
 		if include_current_file:
 			cmd.load(pdb)
 			structure_count += 1
+	
+	if structure_count == 0:
+		print("No structures matching filters. Exiting.")
+		cmd.quit()
+		return
 
+	#Set up scene:
 	cmd.hide("all")
 	cmd.show_as("licorice", "chain X")
 	cmd.color("atomic", "chain X")
