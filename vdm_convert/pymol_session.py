@@ -58,6 +58,7 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 	
 	if len(input_file_names) == 0:
 		print("No files of type {} found in input directory. Exiting.".format(input_type))
+		cmd.quit()
 		return
 
 	#Get scores from each infile name:
