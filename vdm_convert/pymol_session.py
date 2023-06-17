@@ -6,7 +6,7 @@ from os.path import split as path_split
 import argparse
 import sys
 
-def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None):
+def create_session(input_dir, input_type='PDB', selected_residues=None, score_cutoff=None):
 	'''
 	Creates a pymol session from a directory of converted vdM files.
 	Arguments:
@@ -48,8 +48,8 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 			cmd.idx = len(cmd.get_object_list('(all)'))-1
 		show_obj(cmd.idx)
 
-	if residues is None:
-		residues = ['ALA', 'ARG', 'ASN', 'ASP', 'CYS', 
+	if selected_residues is None:
+		selected_residues = ['ALA', 'ARG', 'ASN', 'ASP', 'CYS', 
 			'GLU', 'GLN', 'GLY', 'HIS', 'ILE', 
 			'LEU', 'LYS', 'MET', 'PHE', 'PRO', 
 			'SER', 'THR', 'TRP', 'TYR', 'VAL']
@@ -75,6 +75,10 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 	residues = [x for _,x in sorted(zip(scores,residues), reverse=True)]
 
 	print("Loading structures...")
+	if score_cutoff is not None:
+		print("\tScore cutoff: {}".format(score_cutoff))
+	if selected_residues is not None:
+		print("\tResidues: {}".format(residues))
 	i = 0
 	for pdb in input_file_names:
 		if i > 1000:
@@ -87,8 +91,8 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 		if score_cutoff is not None:
 			if scores[i] < score_cutoff:
 				include_current_file = False
-		if residues is not None:
-			if residues[i] not in residues:
+		if selected_residues is not None:
+			if residues[i] not in selected_residues:
 				include_current_file = False
 		if include_current_file:
 			cmd.load(pdb)
