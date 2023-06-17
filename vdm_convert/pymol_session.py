@@ -103,6 +103,13 @@ def create_session(input_dir, input_type='PDB', selected_residues=None, score_cu
 		print("No structures matching filters. Exiting.")
 		cmd.quit()
 		return
+	
+	#Exit if pymol can't load all the atoms for some reason.
+	#DCD files seem to have this problem.
+	if len(cmd.get_object_list('(all)')) == 0:
+		print("Pymol was unable to load the structures for unknown reason. Exiting.")
+		cmd.quit()
+		return
 
 	#Set up scene:
 	cmd.hide("all")
