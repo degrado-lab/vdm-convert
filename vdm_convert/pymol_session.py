@@ -2,6 +2,7 @@ import importlib
 #from pymol import cmd
 from os import listdir
 from os.path import isfile, join
+from os.path import split as path_split
 import argparse
 import sys
 
@@ -62,11 +63,11 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 	#Get scores from each infile name:
 	scores = []
 	for f in input_file_names:
-		scores.append(float(f.split('_')[1]))
+		scores.append(float(path_split(f)[1].split('_')[1]))
 	#Get residues from each infile name:
 	residues = []
 	for f in input_file_names:
-		residues.append(f.split('_')[0])
+		residues.append(path_split(f)[1].split('_')[0])
 	
 	#sort input file names by score:
 	input_file_names = [x for _,x in sorted(zip(scores,input_file_names))]
