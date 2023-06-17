@@ -70,8 +70,8 @@ def create_session(input_dir, input_type='PDB', residues=None, score_cutoff=None
 		residues.append(path_split(f)[1].split('_')[0])
 	
 	#sort input file names by score:
-	input_file_names = [x for _,x in sorted(zip(scores,input_file_names))]
-	residues = [x for _,x in sorted(zip(scores,residues))]
+	input_file_names = [x for _,x in sorted(zip(scores,input_file_names), reverse=True)]
+	residues = [x for _,x in sorted(zip(scores,residues), reverse=True)]
 
 	if len(input_file_names) > 1000:
 		print("Warning: more than 1000 structures to load. Only showing top structures")
