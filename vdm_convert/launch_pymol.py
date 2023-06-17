@@ -10,8 +10,6 @@ def main():
 	argp.add_argument('--residues', '-r', default=None, nargs='+', help="Residues to include. Default: include all.")
 	args = argp.parse_args()
 
-	command_list = ["pymol_session.py"]+sys.argv[1:]
-	print(command_list)
 	run_string = "vdm_convert.pymol_session.create_session(\'{}\', \'{}\'".format(args.input_dir, args.input_type)
 	if args.residues is not None:
 		run_string += ", residues={}".format(args.residues)
