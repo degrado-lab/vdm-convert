@@ -12,7 +12,7 @@ def main():
 
 	run_string = "vdm_convert.pymol_session.create_session(\'{}\', \'{}\'".format(args.input_dir, args.input_type)
 	if args.residues is not None:
-		run_string += ", residues={}".format(args.residues)
+		run_string += ", selected_residues={}".format(args.residues)
 	if args.score_cutoff is not None:
 		run_string += ", score_cutoff={}".format(args.score_cutoff)
 	run_string += ")"

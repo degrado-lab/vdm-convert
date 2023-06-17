@@ -73,15 +73,17 @@ def create_session(input_dir, input_type='PDB', selected_residues=None, score_cu
 	#sort input file names by score:
 	input_file_names = [x for _,x in sorted(zip(scores,input_file_names), reverse=True)]
 	residues = [x for _,x in sorted(zip(scores,residues), reverse=True)]
+	scores = sorted(scores, reverse=True)
 
 	print("Loading structures...")
 	if score_cutoff is not None:
 		print("\tScore cutoff: {}".format(score_cutoff))
-	if selected_residues is not None:
-		print("\tResidues: {}".format(residues))
-	i = 0
-	for pdb in input_file_names:
-		if i > 1000:
+	if len(selected_residues) < 20:
+		print("\tResidues: {}".format(selected_residues))
+
+	structure_count = 0
+	for i, pdb in enumerate(input_file_names):
+		if structure_count > 1000:
 			print("Warning: more than 1000 structures to load. Only showing top structures")
 			break
 		#Include all files by default:
@@ -96,7 +98,7 @@ def create_session(input_dir, input_type='PDB', selected_residues=None, score_cu
 				include_current_file = False
 		if include_current_file:
 			cmd.load(pdb)
-			i += 1
+			structure_count += 1
 
 	cmd.hide("all")
 	cmd.show_as("licorice", "chain X")
