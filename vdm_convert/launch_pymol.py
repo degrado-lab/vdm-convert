@@ -1,6 +1,6 @@
 import subprocess
-import sys
 import argparse
+from shutil import which
 
 def main():
 	argp = argparse.ArgumentParser()
@@ -10,6 +10,11 @@ def main():
 	argp.add_argument('--residues', '-r', default=None, nargs='+', help="Residues to include. Default: include all.")
 	args = argp.parse_args()
 
+	if which("pymol") is None:
+		print("Pymol not found. Please ensure pymol is installed and accessible through the terminal command 'pymol'.")
+		print("Exiting.")
+		return
+	
 	run_string = "vdm_convert.pymol_session.create_session(\'{}\', \'{}\'".format(args.input_dir, args.input_type)
 	if args.residues is not None:
 		run_string += ", selected_residues={}".format(args.residues)
