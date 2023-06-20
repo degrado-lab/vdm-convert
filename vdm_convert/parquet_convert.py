@@ -124,9 +124,10 @@ def main():
 	argp.add_argument('--input-dir', '-i', default = ".", help="Parquet input directory. Defaults to current directory.")
 	argp.add_argument('--output-dir', '-o', default="convert", help="Output file directory. Defaults to 'convert/'.")
 	argp.add_argument('--output-type', '-t', default="PDB", choices=['PDB', 'PQR', 'PSF', 'DCD'], type=str.upper, help="Filetype to convert to. Defaults to PDB.")
+	argp.add_argument('--residues', '-r', default=None, nargs='+', help="Residues to include. Default: include all.")
 	args = argp.parse_args()
 	
-	convert(args.input_dir, args.output_dir, out_type=args.output_type)
+	convert(args.input_dir, args.output_dir, out_type=args.output_type, residues=args.residues)
 
 
 if __name__ == '__main__':
