@@ -5,6 +5,7 @@ import os
 from os.path import join
 import argparse
 import traceback
+from tqdm import tqdm
 
 ########################################
 ### HELPER FUNCTIONS
@@ -63,9 +64,10 @@ def convert(input_dir, output_dir, out_type='PDB', residues=None):
 			'LEU', 'LYS', 'MET', 'PHE', 'PRO', 
 			'SER', 'THR', 'TRP', 'TYR', 'VAL']
 	
-	### Make Dataframes from parquest files
+	### Make Dataframes from parquet files
+	print('Reading parquet files...')
 	df_list = []
-	for resid in residues:
+	for resid in tqdm(residues):
 		parquet_name = resid+'.parquet.gzip'
 		if os.path.exists(join(input_dir, parquet_name)):
 			df_list.append((resid, pd.read_parquet(join(input_dir, parquet_name))))
@@ -79,10 +81,10 @@ def convert(input_dir, output_dir, out_type='PDB', residues=None):
 	### Create atom groups, so we can order and output as different filetype later
 	print('Creating atom groups...')
 	atomgroup_list = []
-	for resid, data in df_list:
+	for resid, data in tqdm(df_list):
 		last_chain = None
 		last_idx = 0
-		for i in range(len(data)):
+		for i in tqdm(range(len(data)), leave=False):
 			if (data.loc[i, 'chain'] == 'Y' and last_chain == 'X') or (i == len(data)-1):
 				#grab the last idx and current idx, use this to generate atomgroup and pdb
 				atom_group = create_atomgroup(data[last_idx:i])
@@ -101,7 +103,7 @@ def convert(input_dir, output_dir, out_type='PDB', residues=None):
 	print('Writing '+out_type+'s...')
 	#Output an error message at the end if one occurs:
 	error_message = ''
-	for atom_group, resid, c_score, is_centroid, pdb, cnum in atomgroup_list:
+	for atom_group, resid, c_score, is_centroid, pdb, cnum in tqdm(atomgroup_list):
 		
 		struct_name = resid+'_'+str(c_score)[:5]+'_'+pdb+'_clus'+str(cnum)
 		struct_name = struct_name+'_centroid' if is_centroid else struct_name
